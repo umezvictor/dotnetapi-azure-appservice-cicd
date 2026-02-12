@@ -26,30 +26,40 @@ namespace ImageResizerAPI.Controllers
         [HttpPost("upload/azure")]
         public async Task<IActionResult> UploadImagev3([FromForm] FileUploadVM vm)
         {
-            if (vm.File == null || vm.File.Length == 0)
-                return BadRequest("No file uploaded.");
-
-            var extension = Path.GetExtension(vm.File.FileName);
-            var key = Guid.NewGuid().ToString();
-            var blobName = $"{key}{extension}";
-
-            var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
-            await containerClient.CreateIfNotExistsAsync();
-
-            var blobClient = containerClient.GetBlobClient(blobName);
-            using (var stream = vm.File.OpenReadStream())
+            try
             {
-                await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = vm.File.ContentType });
+                if (vm.File == null || vm.File.Length == 0)
+                    return BadRequest("No file uploaded.");
+
+                var extension = Path.GetExtension(vm.File.FileName);
+                var key = Guid.NewGuid().ToString();
+                var blobName = $"{key}{extension}";
+
+                var containerClient = _blobServiceClient.GetBlobContainerClient(_containerName);
+                await containerClient.CreateIfNotExistsAsync();
+
+                var blobClient = containerClient.GetBlobClient(blobName);
+                using (var stream = vm.File.OpenReadStream())
+                {
+                    await blobClient.UploadAsync(stream, new BlobHttpHeaders { ContentType = vm.File.ContentType });
+                }
+
+                var blobUri = blobClient.Uri.ToString();
+                //await _processedFileDbContext.ProcessedFiles.AddAsync(new ProcessedFile
+                //{
+                //    DateProcessed = DateTime.UtcNow,
+                //    UserId = Guid.NewGuid().ToString() //dummy user id
+                //});
+                //await _processedFileDbContext.SaveChangesAsync();
+                return Ok(new { Message = "File uploaded to Azure Blob Storage!", BlobUrl = blobUri, BlobName = blobName });
+            }
+            catch (Exception ex)
+            {
+
+                return Ok(ex);
+
             }
 
-            var blobUri = blobClient.Uri.ToString();
-            //await _processedFileDbContext.ProcessedFiles.AddAsync(new ProcessedFile
-            //{
-            //    DateProcessed = DateTime.UtcNow,
-            //    UserId = Guid.NewGuid().ToString() //dummy user id
-            //});
-            //await _processedFileDbContext.SaveChangesAsync();
-            return Ok(new { Message = "File uploaded to Azure Blob Storage!", BlobUrl = blobUri, BlobName = blobName });
         }
 
 
