@@ -1,0 +1,6 @@
+services:
+  imageresizerapi:
+    image: ${DOCKER_REGISTRY-}imageresizerapi
+    build:
+      context: .
+      dockerfile: src/Dockerfile

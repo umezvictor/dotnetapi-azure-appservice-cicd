@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "apis1": {
+      "type": "apis"
+    },
+    "mssql1": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING",
+      "dynamicId": null
+    },
+    "storage1": {
+      "type": "storage",
+      "connectionId": "AzureBlobStorage:ConnectionString1",
+      "dynamicId": null
+    },
+    "secrets1": {
+      "type": "secrets"
+    },
+    "storage2": {
+      "type": "storage",
+      "connectionId": "StorageConnection"
+    }
+  }
+}

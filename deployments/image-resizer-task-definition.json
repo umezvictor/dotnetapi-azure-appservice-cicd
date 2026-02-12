@@ -1,0 +1,96 @@
+{
+    "compatibilities": [
+        "EC2",
+        "MANAGED_INSTANCES",
+        "FARGATE"
+    ],
+    "containerDefinitions": [
+        {
+            "cpu": 0,
+            "environment": [
+                {
+                    "name": "ASPNETCORE_ENVIRONMENT",
+                    "value": "Development"
+                }
+            ],
+            "environmentFiles": [],
+            "essential": true,
+            "image": "261371110098.dkr.ecr.eu-north-1.amazonaws.com/image-resizer",
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/image-resizer",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "eu-north-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "mountPoints": [],
+            "name": "image-resizer",
+            "portMappings": [
+                {
+                    "appProtocol": "http",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "name": "image-resizer-8080-tcp",
+                    "protocol": "tcp"
+                }
+            ],
+            "systemControls": [],
+            "ulimits": [],
+            "volumesFrom": []
+        }
+    ],
+    "cpu": "1024",
+    "enableFaultInjection": false,
+    "executionRoleArn": "arn:aws:iam::261371110098:role/EcsTaskExecutionRole",
+    "family": "image-resizer",
+    "memory": "2048",
+    "networkMode": "awsvpc",
+    "placementConstraints": [],
+    "registeredAt": "2025-12-25T10:46:31.596Z",
+    "registeredBy": "arn:aws:iam::261371110098:user/victorblaze",
+    "requiresAttributes": [
+        {
+            "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+        },
+        {
+            "name": "ecs.capability.execution-role-awslogs"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.ecr-auth"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.task-iam-role"
+        },
+        {
+            "name": "ecs.capability.execution-role-ecr-pull"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+        },
+        {
+            "name": "ecs.capability.task-eni"
+        },
+        {
+            "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+        }
+    ],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "revision": 11,
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "status": "ACTIVE",
+    "taskDefinitionArn": "arn:aws:ecs:eu-north-1:261371110098:task-definition/image-resizer:11",
+    "taskRoleArn": "arn:aws:iam::261371110098:role/EcsTaskExecutionRole",
+    "volumes": [],
+    "tags": []
+}

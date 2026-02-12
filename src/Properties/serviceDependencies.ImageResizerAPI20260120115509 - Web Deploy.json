@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "apis1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/ImageResizerAPIapi/apis/ImageResizerAPI",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/mysqlserver1989/databases/imageresizerdb",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING",
+      "dynamicId": null
+    },
+    "storage1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Storage/storageAccounts/vicappstorage",
+      "type": "storage.azure",
+      "connectionId": "AzureBlobStorage:ConnectionString1",
+      "dynamicId": null
+    }
+  }
+}
