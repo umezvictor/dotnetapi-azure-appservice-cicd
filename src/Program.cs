@@ -1,3 +1,4 @@
+using Azure.Storage.Blobs;
 using ImageResizerAPI;
 using Microsoft.AspNetCore.Http.Features;
 using Serilog;
@@ -5,10 +6,10 @@ using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var configuration = new ConfigurationBuilder()
-//    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-//    .AddEnvironmentVariables()
-//    .Build();
+var configuration = new ConfigurationBuilder()
+    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+    .AddEnvironmentVariables()
+    .Build();
 
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
@@ -24,11 +25,11 @@ builder.Services.AddCors();
 
 builder.Services.AddSignalR();
 
-//builder.Services.AddSingleton(x =>
-//{
-//    string connectionString = configuration.GetSection("AzureBlobStorage")["ConnectionString"]!;
-//    return new BlobServiceClient(connectionString);
-//});
+builder.Services.AddSingleton(x =>
+{
+    string connectionString = configuration.GetSection("AzStorage")["Conn"]!;
+    return new BlobServiceClient(connectionString);
+});
 
 builder.Host.UseSerilog();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -60,6 +61,7 @@ builder.Services.AddProblemDetails(options =>
 //});
 
 var app = builder.Build();
+
 app.UseSwagger();
 app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
