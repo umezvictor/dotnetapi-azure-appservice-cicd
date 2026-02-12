@@ -19,7 +19,7 @@ namespace ImageResizerAPI.Controllers
         {
             _blobServiceClient = blobServiceClient;
             _processedFileDbContext = processedFileDbContext;
-            _containerName = configuration.GetSection("AzureBlobStorage")["ContainerName"]!;
+            _containerName = configuration.GetSection("AzStorage")["Container"]!;
         }
 
         //upload image to Azure Blob Storage
@@ -56,7 +56,7 @@ namespace ImageResizerAPI.Controllers
             catch (Exception ex)
             {
 
-                return Ok(ex);
+                return Ok(new { Message = ex.Message });
 
             }
 
