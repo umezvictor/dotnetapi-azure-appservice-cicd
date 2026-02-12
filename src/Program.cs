@@ -23,14 +23,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddCors();
 
-//uncommwnr when deploying to AWS
-//builder.Services.AddDefaultAWSOptions(builder.Configuration.GetAWSOptions());
-//builder.Services.AddAWSService<IAmazonS3>();
+
 builder.Services.AddSignalR();
 
 builder.Services.AddSingleton(x =>
 {
-    //var configuration = x.GetRequiredService<IConfiguration>();
     string connectionString = configuration.GetSection("AzureBlobStorage")["ConnectionString"]!;
     return new BlobServiceClient(connectionString);
 });
