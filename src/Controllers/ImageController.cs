@@ -10,15 +10,14 @@ namespace ImageResizerAPI.Controllers
     {
 
         private readonly BlobServiceClient _blobServiceClient;
-        private readonly ProcessedFileDbContext _processedFileDbContext;
+        //private readonly ProcessedFileDbContext _processedFileDbContext;
         private readonly string _containerName;
 
-
-        public ImageController(BlobServiceClient blobServiceClient, IConfiguration configuration,
-            ProcessedFileDbContext processedFileDbContext)
+        //ProcessedFileDbContext processedFileDbContext
+        public ImageController(BlobServiceClient blobServiceClient, IConfiguration configuration)
         {
             _blobServiceClient = blobServiceClient;
-            _processedFileDbContext = processedFileDbContext;
+            //_processedFileDbContext = processedFileDbContext;
             _containerName = configuration.GetSection("AzStorage")["Container"]!;
         }
 
