@@ -1,6 +1,7 @@
 using Azure.Storage.Blobs;
 using ImageResizerAPI;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using System.Diagnostics;
 
@@ -48,19 +49,29 @@ builder.Services.AddProblemDetails(options =>
 });
 
 
-//var connection = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+var connection = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
 
-//builder.Services.AddDbContext<ProcessedFileDbContext>(options =>
-//    options.UseSqlServer(connection));
+builder.Services.AddDbContext<ProcessedFileDbContext>(options =>
+    options.UseSqlServer(connection));
 
-//builder.Services.AddAzureClients(clientBuilder =>
-//{
-//    clientBuilder.AddBlobServiceClient(builder.Configuration["StorageConnection:blobServiceUri"]!).WithName("StorageConnection");
-//    clientBuilder.AddQueueServiceClient(builder.Configuration["StorageConnection:queueServiceUri"]!).WithName("StorageConnection");
-//    clientBuilder.AddTableServiceClient(builder.Configuration["StorageConnection:tableServiceUri"]!).WithName("StorageConnection");
-//});
 
 var app = builder.Build();
+
+// Apply EF Core migrations at startup
+using (var scope = app.Services.CreateScope())
+{
+    try
+    {
+        var db = scope.ServiceProvider.GetRequiredService<ProcessedFileDbContext>();
+        db.Database.Migrate();
+        //Log.Information("Database migrations applied successfully.");
+    }
+    catch (Exception ex)
+    {
+        Log.Fatal(ex, "An error occurred while applying database migrations.");
+        throw;
+    }
+}
 
 app.UseSwagger();
 app.UseSwaggerUI();

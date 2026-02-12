@@ -10,14 +10,15 @@ namespace ImageResizerAPI.Controllers
     {
 
         private readonly BlobServiceClient _blobServiceClient;
-        //private readonly ProcessedFileDbContext _processedFileDbContext;
+        private readonly ProcessedFileDbContext _processedFileDbContext;
         private readonly string _containerName;
 
         //ProcessedFileDbContext processedFileDbContext
-        public ImageController(BlobServiceClient blobServiceClient, IConfiguration configuration)
+        public ImageController(BlobServiceClient blobServiceClient, IConfiguration configuration,
+            ProcessedFileDbContext processedFileDbContext)
         {
             _blobServiceClient = blobServiceClient;
-            //_processedFileDbContext = processedFileDbContext;
+            _processedFileDbContext = processedFileDbContext;
             _containerName = configuration.GetSection("AzStorage")["Container"]!;
         }
 
@@ -44,12 +45,12 @@ namespace ImageResizerAPI.Controllers
                 }
 
                 var blobUri = blobClient.Uri.ToString();
-                //await _processedFileDbContext.ProcessedFiles.AddAsync(new ProcessedFile
-                //{
-                //    DateProcessed = DateTime.UtcNow,
-                //    UserId = Guid.NewGuid().ToString() //dummy user id
-                //});
-                //await _processedFileDbContext.SaveChangesAsync();
+                await _processedFileDbContext.ProcessedFiles.AddAsync(new ProcessedFile
+                {
+                    DateProcessed = DateTime.UtcNow,
+                    UserId = Guid.NewGuid().ToString() //dummy user id
+                });
+                await _processedFileDbContext.SaveChangesAsync();
                 return Ok(new { Message = "File uploaded to Azure Blob Storage!", BlobUrl = blobUri, BlobName = blobName });
             }
             catch (Exception ex)
