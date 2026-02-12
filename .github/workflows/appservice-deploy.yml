@@ -24,8 +24,8 @@ jobs:
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
-      # Setup .NET Core SDK
-      - name: Setup .NET
+      # Setup .NET Version
+      - name: "Set up .NET version: ${{ env.DOTNET_VERSION }}"
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
