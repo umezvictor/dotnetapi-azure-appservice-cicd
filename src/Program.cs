@@ -49,7 +49,7 @@ builder.Services.AddProblemDetails(options =>
 });
 
 
-var connection = configuration.GetConnectionString("AZURE_SQL_CONNECTIONSTRING");
+var connection = configuration.GetConnectionString("SQLCONNSTR_CONNECTIONSTRING");
 
 builder.Services.AddDbContext<ProcessedFileDbContext>(options =>
     options.UseSqlServer(connection));
