@@ -12,18 +12,18 @@ var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-//Log.Logger = new LoggerConfiguration()
-//    .ReadFrom.Configuration(builder.Configuration)
-//    .CreateLogger();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 
 // Add services to the container.
-var applicationInsightsUrl = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+//var applicationInsightsUrl = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.ApplicationInsights(
-        applicationInsightsUrl,
-        TelemetryConverter.Traces)
-    .CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.ApplicationInsights(
+//        applicationInsightsUrl,
+//        TelemetryConverter.Traces)
+//    .CreateLogger();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -69,7 +69,7 @@ try
 catch (Exception ex)
 {
 
-    Log.Fatal(ex, "An error occurred when connecting to db.");
+    Log.Fatal(ex, "DB CONNECTION ERROR");
 
 }
 
@@ -88,7 +88,7 @@ using (var scope = app.Services.CreateScope())
     }
     catch (Exception ex)
     {
-        Log.Fatal(ex, "An error occurred while applying database migrations.");
+        Log.Fatal(ex, "MIGRATION ERROR");
         //throw;
     }
 }
