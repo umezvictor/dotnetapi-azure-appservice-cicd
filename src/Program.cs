@@ -12,11 +12,18 @@ var configuration = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .Build();
 
-Log.Logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .CreateLogger();
+//Log.Logger = new LoggerConfiguration()
+//    .ReadFrom.Configuration(builder.Configuration)
+//    .CreateLogger();
 
 // Add services to the container.
+var applicationInsightsUrl = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.ApplicationInsights(
+        applicationInsightsUrl,
+        TelemetryConverter.Traces)
+    .CreateLogger();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -33,13 +40,8 @@ builder.Services.AddSingleton(x =>
 });
 
 // Add Application Insights telemetry
-var applicationInsightsUrl = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
 
-Log.Logger = new LoggerConfiguration()
-    .WriteTo.ApplicationInsights(
-        applicationInsightsUrl,
-        TelemetryConverter.Traces)
-    .CreateLogger();
+
 
 
 builder.Host.UseSerilog();
