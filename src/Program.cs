@@ -32,6 +32,16 @@ builder.Services.AddSingleton(x =>
     return new BlobServiceClient(connectionString);
 });
 
+// Add Application Insights telemetry
+var applicationInsightsUrl = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.ApplicationInsights(
+        applicationInsightsUrl,
+        TelemetryConverter.Traces)
+    .CreateLogger();
+
+
 builder.Host.UseSerilog();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(options =>
@@ -48,11 +58,19 @@ builder.Services.AddProblemDetails(options =>
     };
 });
 
+try
+{
+    var connection = configuration.GetConnectionString("DefaultConnection");
+    builder.Services.AddDbContext<ProcessedFileDbContext>(options =>
+        options.UseSqlServer(connection));
+}
+catch (Exception ex)
+{
 
-var connection = configuration.GetConnectionString("SQLCONNSTR_CONNECTIONSTRING");
+    Log.Fatal(ex, "An error occurred when connecting to db.");
 
-builder.Services.AddDbContext<ProcessedFileDbContext>(options =>
-    options.UseSqlServer(connection));
+}
+
 
 
 var app = builder.Build();
@@ -64,12 +82,12 @@ using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<ProcessedFileDbContext>();
         db.Database.Migrate();
-        //Log.Information("Database migrations applied successfully.");
+        Log.Information("Database migrations applied successfully.");
     }
     catch (Exception ex)
     {
         Log.Fatal(ex, "An error occurred while applying database migrations.");
-        throw;
+        //throw;
     }
 }
 
